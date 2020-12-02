@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Where2Eat</string>
+    <string name="NameDisplayTxt">Please Enter A Display Name</string>
+    <string name="WelcomeTxt">Welcome to Where to Eat!</string>
+</resources>
