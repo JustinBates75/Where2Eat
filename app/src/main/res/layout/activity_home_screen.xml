@@ -19,13 +19,13 @@
 
         <TextView
             android:id="@+id/playerOneText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/NameDisplayTxt" />
 
         <TextView
             android:id="@+id/playerTwoText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/NameDisplayTxt" />
 
@@ -33,6 +33,8 @@
             android:id="@+id/buttonStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
             android:text="Start" />
     </LinearLayout>
 

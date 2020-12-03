@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                         imageView.setImageResource(R.drawable.ic_eastsidemarioslogo);
                     }
             }
-        }));
+        }));//end of dine button listener
 
         dashButton.setOnClickListener(v -> {
             //everything for when the dash button is clicked
@@ -143,8 +144,13 @@ public class MainActivity extends AppCompatActivity {
                     imageView.setImageResource(R.drawable.ic_eastsidemarioslogo);
                 }
             }
-        });
+        }); //end of dash button listener
+
+    }// end of create
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.consensus_menu, menu);
+        return true;
     }
-
-
 }
