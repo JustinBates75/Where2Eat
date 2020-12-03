@@ -23,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private static int player2Choice;
     private boolean isPlayer1=true;
     private static int resourceid;
-    //private static final String DB_NAME ="resturant_db";
-    //private static  int DB_VERSION =1;
+
     /*ToDO:
     Make an array to hold the resturants and their id's
     Populate array form database
@@ -38,13 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
-    /*new SQLiteOpenHelper(this, DB_NAME, null, DB_VERSION ){
 
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-
-        }
-    }*/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView =findViewById(R.id.imageView);
