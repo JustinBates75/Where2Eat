@@ -24,6 +24,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="TODO"
                 app:srcCompat="@drawable/ic_thekeg" />
+
         </androidx.cardview.widget.CardView>
 
         <SeekBar
