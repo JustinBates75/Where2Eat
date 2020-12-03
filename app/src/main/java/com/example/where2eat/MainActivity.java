@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
     /*new SQLiteOpenHelper(this, DB_NAME, null, DB_VERSION ){
 
         @Override
