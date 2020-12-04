@@ -30,9 +30,18 @@ public class HomeScreen extends AppCompatActivity {
 
         startButton.setOnClickListener((v ->{
             // Enter user data to db
-            ((Where2EatApplication)getApplication()).createUser(editTextTextPersonName.getText().toString());
-            ((Where2EatApplication)getApplication()).createUser(editTextTextPersonName2.getText().toString());
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            String player1Name = editTextTextPersonName.getText().toString();
+            String player2Name = editTextTextPersonName2.getText().toString();
+            if(player1Name.isEmpty() || player2Name.isEmpty())
+            {
+                // Validation if either player name is empty
+            }
+            else // If names are filled out, allow the main activity to start
+            {
+                ((Where2EatApplication)getApplication()).createUser(player1Name);
+                ((Where2EatApplication)getApplication()).createUser(player2Name);
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
             /* Editor ed = sharedPref.edit();
             ed.putString("Player1Name", editTextTextPersonName.getText().toString());
             ed.putString("player2Name", editTextTextPersonName2.getText().toString());*/
