@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Enter your name here" />
+            android:text="Justin" />
 
         <TextView
             android:id="@+id/playerTwoText"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Enter your name here" />
+            android:text="Colin" />
 
         <Button
             android:id="@+id/buttonStart"
