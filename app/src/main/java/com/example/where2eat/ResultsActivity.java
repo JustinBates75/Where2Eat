@@ -5,15 +5,33 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+
+import java.util.List;
 
 public class ResultsActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
+
+        List<Restaurant> results = ((Where2EatApplication)getApplication()).getChoices();
+        ScrollView sV = new ScrollView(this);
+        LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.VERTICAL);
+        for (Restaurant curRes: results) {
+            ImageView iView = new ImageView(this);
+            iView.setBackgroundResource(getResources().getIdentifier("ic_res" + curRes.Id, "drawable", getPackageName()));
+            ll.addView(iView);
+        }
+        ll.setGravity(Gravity.CENTER);
+        sV.addView(ll);
+        setContentView(sV);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_results);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
