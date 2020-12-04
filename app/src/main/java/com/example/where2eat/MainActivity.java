@@ -2,14 +2,13 @@ package com.example.where2eat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.view.Menu;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
@@ -17,12 +16,11 @@ public class MainActivity extends AppCompatActivity {
     private Button dashButton;
     private TextView restaurantNameText;
     private TextView PlayerNameText;
-    private static int player1SwipeCount=0;
-    private static int player2SwipeCount =0;
-    private static int player1Choice;
-    private static int player2Choice;
-    private boolean isPlayer1=true;
-    private static int resourceid;
+
+    private static int currentSwipeCount = 0;
+    private static final int MAX_SWIPE_COUNT = 10;
+    private boolean isPlayer1 = true;
+    List<Where2EatApplication.Restaurant> restaurants;
 
     /*ToDO:
     Make an array to hold the resturants and their id's
@@ -41,106 +39,66 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView =findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.ic_thekeg);
+        imageView.setImageResource(R.drawable.ic_res1);
         dineButton =findViewById(R.id.buttonDine);
         dashButton =findViewById(R.id.buttonDash);
         restaurantNameText =findViewById(R.id.resturantNameText);
         PlayerNameText =findViewById(R.id.PlayerNameText);
 
+        restaurants = ((Where2EatApplication)getApplication()).getRestaurantList();
+        PlayerNameText.setText("Player 1");
+        ChangeToNextRestaurant();
 
-        dineButton.setOnClickListener((v -> {
-            //everything once the dine button is clicked
-            //Change to Selected
-            //Change restaurant title
-            //Change Restaurant Picture
-            //Add 1 to swipe count
-            if (player1SwipeCount>10) {
-                isPlayer1 =false;
-            }
-                if (isPlayer1 == true) {
-                    PlayerNameText.setText("Player 1");
-                    player1SwipeCount += 1;
-                    restaurantNameText.setText("New Restaurant" + player1SwipeCount);
-
-                    if (player1SwipeCount==2){
-                        imageView.setImageResource(R.drawable.ic_awlogo);
-                    }
-                    else if (player1SwipeCount==3){
-                        imageView.setImageResource(R.drawable.ic_beertownlogo);
-                    }
-                    else if (player1SwipeCount==4){
-                        imageView.setImageResource(R.drawable.ic_dairyqueenlogo);
-                    }
-                    else if (player1SwipeCount==5){
-                        imageView.setImageResource(R.drawable.ic_eastsidemarioslogo);
-                    }
-                    else if (player1SwipeCount==6){
-                        imageView.setImageResource(R.drawable.ic_mcdonaldslogo);
-                    }
-                    else if (player1SwipeCount==7){
-                        imageView.setImageResource(R.drawable.ic_newyorkfrieslogo);
-                    }
-                    else if (player1SwipeCount==8){
-                        //imageView.setImageResource(R.drawable.ic_timhortonslogo);
-                        resourceid = getResources().getIdentifier("ic_thekeg", "drawable", getPackageName());
-                        imageView.setImageResource(resourceid);
-                    }
-            } else {
-                PlayerNameText.setText("Player 2");
-                player2SwipeCount += 1;
-                restaurantNameText.setText("New Restaurant" + player2SwipeCount);
-                    if (player2SwipeCount==1){
-                        imageView.setImageResource(R.drawable.ic_awlogo);
-                    }
-                    else if (player2SwipeCount==2){
-                        imageView.setImageResource(R.drawable.ic_dairyqueenlogo);
-                    }
-                    else{
-                        imageView.setImageResource(R.drawable.ic_eastsidemarioslogo);
-                    }
-            }
-        }));//end of dine button listener
+        dineButton.setOnClickListener(v -> {
+            onDineOrDash(true);
+        }); //end of dine button listener
 
         dashButton.setOnClickListener(v -> {
-            //everything for when the dash button is clicked
-            //Change to Not Selected
-            //Change restaurant title
-            //Change Restaurant Picture
-            //Add 1 to swipe count
-            if (player1SwipeCount>10) {
-                isPlayer1 =false;
-            }
-            if (isPlayer1 == true) {
-                PlayerNameText.setText("Player 1");
-                player1SwipeCount += 1;
-                restaurantNameText.setText("New Restaurant" + player1SwipeCount);
-                if (player1SwipeCount==2){
-                    imageView.setImageResource(R.drawable.ic_awlogo);
-                }
-                else if (player1SwipeCount==3){
-                    imageView.setImageResource(R.drawable.ic_dairyqueenlogo);
-                }
-                else {
-                    imageView.setImageResource(R.drawable.ic_eastsidemarioslogo);
-                }
-            } else {
-                PlayerNameText.setText("Player 2");
-                player2SwipeCount += 1;
-                restaurantNameText.setText("New Restaurant" + player2SwipeCount);
-                if (player2SwipeCount==1){
-                    imageView.setImageResource(R.drawable.ic_awlogo);
-                }
-                else if (player2SwipeCount==2){
-                    imageView.setImageResource(R.drawable.ic_dairyqueenlogo);
-                }
-                else{
-                    imageView.setImageResource(R.drawable.ic_eastsidemarioslogo);
-                }
-            }
+            onDineOrDash(false);
         }); //end of dash button listener
 
     }// end of create
 
+    public void onDineOrDash(boolean isDine)
+    {
+        if(isDine)
+        {
+            //Add choice to db
+        }
+
+        //Check if player change needed or end of player 2's turn
+        if(currentSwipeCount >= MAX_SWIPE_COUNT ||
+            currentSwipeCount >= restaurants.size())
+        {
+            if (isPlayer1) {
+                isPlayer1 = false;
+                PlayerNameText.setText("Player 2");
+                currentSwipeCount = 0;
+                ChangeToNextRestaurant();
+            }
+            else {
+                //End player 2's turn
+                //Move to results page
+
+                //Delete this, testing only
+                currentSwipeCount = 0;
+                PlayerNameText.setText("Player 1");
+                isPlayer1 = true;
+                ChangeToNextRestaurant();
+            }
+        }
+        else { //Otherwise, change to next restaurant
+            ChangeToNextRestaurant();
+        }
+    }
+
+    public void ChangeToNextRestaurant()
+    {
+        Where2EatApplication.Restaurant currentRestaurant = restaurants.get(currentSwipeCount);
+        imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
+        restaurantNameText.setText(currentRestaurant.Name + " : " + (currentSwipeCount + 1));
+        currentSwipeCount++;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.consensus_menu, menu);
