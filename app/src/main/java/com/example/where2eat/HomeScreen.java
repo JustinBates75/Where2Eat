@@ -21,14 +21,22 @@ public class HomeScreen extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-        startButton =findViewById(R.id.buttonStart);
+        startButton = findViewById(R.id.buttonStart);
+        editTextTextPersonName = findViewById(R.id.editTextTextPersonName);
+        editTextTextPersonName2 = findViewById(R.id.editTextTextPersonName2);
+
+        //Drop user table and choice table from db
+        ((Where2EatApplication)getApplication()).resetUsers();
 
         startButton.setOnClickListener((v ->{
+            // Enter user data to db
+            ((Where2EatApplication)getApplication()).createUser(editTextTextPersonName.getText().toString());
+            ((Where2EatApplication)getApplication()).createUser(editTextTextPersonName2.getText().toString());
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            Editor ed = sharedPref.edit();
+            /* Editor ed = sharedPref.edit();
             ed.putString("Player1Name", editTextTextPersonName.getText().toString());
-            ed.putString("player2Name", editTextTextPersonName2.getText().toString());
+            ed.putString("player2Name", editTextTextPersonName2.getText().toString());*/
         }));
-        sharedPref =getSharedPreferences("lastInputs", MODE_PRIVATE);
+        // sharedPref =getSharedPreferences("lastInputs", MODE_PRIVATE);
     }
 }

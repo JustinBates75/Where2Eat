@@ -20,17 +20,14 @@ public class Where2EatApplication extends Application {
                 //Create Tables
                 //CREATE PriceRange Table
                 db.execSQL("CREATE TABLE IF NOT EXISTS PriceRange (priceRangeId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, min REAL, max REAL, name TEXT);");
-                //CREATE Users Table
-                db.execSQL("CREATE TABLE IF NOT EXISTS Users (userId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT);");
                 //CREATE RestaurantTypes Table
                 db.execSQL("CREATE TABLE IF NOT EXISTS RestaurantTypes (typeId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT);");
                 //CREATE Restaurant Table
                 db.execSQL("CREATE TABLE IF NOT EXISTS Restaurants (restaurantId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, priceRangeId INTEGER NOT NULL," +
                         "typeId INTEGER NOT NULL, name TEXT, FOREIGN KEY (priceRangeId) REFERENCES PriceRange (priceRangeId), FOREIGN KEY (typeId) REFERENCES RestaurantTypes (typeId));");
+                //CREATE Users Table
                 //CREATE UserChoices Table
-                db.execSQL("CREATE TABLE IF NOT EXISTS UserChoices (userId INTEGER NOT NULL, restaurantId INTEGER NOT NULL," +
-                        "FOREIGN KEY (userId) REFERENCES Users (userId), FOREIGN KEY (restaurantId) " +
-                        "REFERENCES Restaurants (restaurantId), PRIMARY KEY (userId, restaurantId));");
+                createUserTables(db);
 
                 //Insert Default DB data
                 //INSERT RestaurantType Data
@@ -64,9 +61,8 @@ public class Where2EatApplication extends Application {
             @Override
             public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
                 //DROP UserChoices Table
-                db.execSQL("DROP TABLE IF EXISTS UserChoices;");
                 //DROP Users Table
-                db.execSQL("DROP TABLE IF EXISTS Users;");
+                dropUserTables(db);
                 //DROP RestaurantTypes Table
                 db.execSQL("DROP TABLE IF EXISTS RestaurantTypes;");
                 //DROP PriceRange Table
@@ -95,6 +91,50 @@ public class Where2EatApplication extends Application {
         return restaurants;
     }
 
+    public void resetUsers() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        dropUserTables(db);
+        createUserTables(db);
+    }
+
+    private void dropUserTables(SQLiteDatabase db){
+        db.execSQL("DROP TABLE IF EXISTS UserChoices;");
+        db.execSQL("DROP TABLE IF EXISTS Users;");
+    }
+
+    private void createUserTables(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS Users (userId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS UserChoices (userId INTEGER NOT NULL, restaurantId INTEGER NOT NULL," +
+                "FOREIGN KEY (userId) REFERENCES Users (userId), FOREIGN KEY (restaurantId) " +
+                "REFERENCES Restaurants (restaurantId), PRIMARY KEY (userId, restaurantId));");
+    }
+
+    public void createUser(String userName) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        //SQL Injection, lol..
+        db.execSQL("INSERT INTO Users (name) VALUES (\"" + userName + "\");");
+    }
+
+    public String getPlayer1Name()
+    {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Users;", null);
+        cursor.moveToFirst();
+        String pName = cursor.getString(1);
+        cursor.close();
+        return pName;
+    }
+
+    public String getPlayer2Name()
+    {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Users;", null);
+        cursor.moveToFirst();
+        cursor.moveToNext();
+        String pName = cursor.getString(1);
+        cursor.close();
+        return pName;
+    }
     public class Restaurant{
         public int Id;
         public String PriceRange;

@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
     List<Where2EatApplication.Restaurant> restaurants;
 
     private SharedPreferences sharedPref;
-    private String player1Name;
-    private String player2Name;
 
     /*ToDO:
     Make an array to hold the restaurants and their id's
@@ -49,17 +47,14 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        imageView =findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.ic_res1);
-        dineButton =findViewById(R.id.buttonDine);
-        dashButton =findViewById(R.id.buttonDash);
-        restaurantNameText =findViewById(R.id.resturantNameText);
-        PlayerNameText =findViewById(R.id.PlayerNameText);
-        //player1Name= sharedPref.getString("player1Name", "Player 1").toString();
-        //player2Name = sharedPref.getString("player2Name", "player 2");
+        imageView = findViewById(R.id.imageView);
+        dineButton = findViewById(R.id.buttonDine);
+        dashButton = findViewById(R.id.buttonDash);
+        restaurantNameText = findViewById(R.id.resturantNameText);
+        PlayerNameText = findViewById(R.id.PlayerNameText);
 
         restaurants = ((Where2EatApplication)getApplication()).getRestaurantList();
-        PlayerNameText.setText("Player 1");
+        PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
         ChangeToNextRestaurant();
         dineButton.setOnClickListener(v -> {
             onDineOrDash(true);
@@ -69,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             onDineOrDash(false);
         }); //end of dash button listener
 
-        sharedPref =getSharedPreferences("lastInputs", MODE_PRIVATE);
+        //sharedPref = getSharedPreferences("lastInputs", MODE_PRIVATE);
     }// end of create
 
     public void onDineOrDash(boolean isDine)
@@ -85,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         {
             if (isPlayer1) {
                 isPlayer1 = false;
-                PlayerNameText.setText("Player 2");
+                PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer2Name());
                 currentSwipeCount = 0;
                 ChangeToNextRestaurant();
             }
@@ -95,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //Delete this, testing only
                 currentSwipeCount = 0;
-                PlayerNameText.setText("Player 1");
+                PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
                 isPlayer1 = true;
                 ChangeToNextRestaurant();
             }
@@ -130,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 //Show settings
                 break;
             default:
-                ret=super.onOptionsItemSelected(item);
+                ret = super.onOptionsItemSelected(item);
                 break;
 
         }
