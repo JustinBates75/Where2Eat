@@ -1,12 +1,21 @@
 package com.example.where2eat;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.Menu;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences;
+import android.content.Context;
 
 import java.util.List;
 
@@ -22,8 +31,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean isPlayer1 = true;
     List<Where2EatApplication.Restaurant> restaurants;
 
+    private SharedPreferences sharedPref;
+    private String player1Name;
+    private String player2Name;
+
     /*ToDO:
-    Make an array to hold the resturants and their id's
+    Make an array to hold the restaurants and their id's
     Populate array form database
     cycle through array on any button click
 
@@ -44,11 +57,12 @@ public class MainActivity extends AppCompatActivity {
         dashButton =findViewById(R.id.buttonDash);
         restaurantNameText =findViewById(R.id.resturantNameText);
         PlayerNameText =findViewById(R.id.PlayerNameText);
+        //player1Name= sharedPref.getString("player1Name", "Player 1").toString();
+        //player2Name = sharedPref.getString("player2Name", "player 2");
 
         restaurants = ((Where2EatApplication)getApplication()).getRestaurantList();
         PlayerNameText.setText("Player 1");
         ChangeToNextRestaurant();
-
         dineButton.setOnClickListener(v -> {
             onDineOrDash(true);
         }); //end of dine button listener
@@ -57,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             onDineOrDash(false);
         }); //end of dash button listener
 
+        sharedPref =getSharedPreferences("lastInputs", MODE_PRIVATE);
     }// end of create
 
     public void onDineOrDash(boolean isDine)
@@ -103,5 +118,24 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.consensus_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        boolean ret = true;
+        switch (item.getItemId()){
+            case R.id.menu_reset:
+                //reset action
+                break;
+            case R.id.menu_settings:
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                //Show settings
+                break;
+            default:
+                ret=super.onOptionsItemSelected(item);
+                break;
+
+        }
+        return ret;
     }
 }
