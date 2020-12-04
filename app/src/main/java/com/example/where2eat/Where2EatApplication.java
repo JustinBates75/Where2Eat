@@ -1,10 +1,12 @@
 package com.example.where2eat;
 
 import android.app.Application;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,11 +80,11 @@ public class Where2EatApplication extends Application {
     public List<Restaurant> getRestaurantList(){
         List<Restaurant> restaurants = new ArrayList<Restaurant>();
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT Restaurants.restaurantId, Restaurants.name, RestaurantTypes.name, PriceRange.name FROM Restaurants, RestaurantTypes, PriceRange WHERE RestaurantTypes.typeId == Restaurants.typeId AND PriceRange.priceRangeId == Restaurants.priceRangeId;",null);
+        Cursor cursor = db.rawQuery("SELECT Restaurants.restaurantId, Restaurants.name, RestaurantTypes.name, PriceRange.name, PriceRange.min, PriceRange.max FROM Restaurants, RestaurantTypes, PriceRange WHERE RestaurantTypes.typeId == Restaurants.typeId AND PriceRange.priceRangeId == Restaurants.priceRangeId;",null);
         cursor.moveToFirst();
         while(!cursor.isClosed())
         {
-            Restaurant newRes = new Restaurant(cursor.getInt(0), cursor.getString(3), cursor.getString(2), cursor.getString(1));
+            Restaurant newRes = new Restaurant(cursor.getInt(0), cursor.getString(3), cursor.getString(2), cursor.getString(1), cursor.getInt(4), cursor.getInt(5));
             restaurants.add(newRes);
             cursor.moveToNext();
             if(cursor.isAfterLast())
@@ -111,8 +113,9 @@ public class Where2EatApplication extends Application {
 
     public void createUser(String userName) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        //SQL Injection, lol..
-        db.execSQL("INSERT INTO Users (name) VALUES (\"" + userName + "\");");
+        ContentValues values = new ContentValues();
+        values.put("name", userName);
+        db.insert("Users", null, values);
     }
 
     public String getPlayer1Name()
@@ -135,17 +138,24 @@ public class Where2EatApplication extends Application {
         cursor.close();
         return pName;
     }
-    public class Restaurant{
-        public int Id;
-        public String PriceRange;
-        public String Type;
-        public String Name;
 
-        public Restaurant(int id, String priceRange, String type, String name) {
-            this.Id = id;
-            this.PriceRange = priceRange;
-            this.Type = type;
-            this.Name = name;
+    public void addChoice(boolean isPlayer1, int restaurantId)
+    {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        int userId = 0;
+        if(isPlayer1) {
+            userId = 1;
         }
+        else {
+            userId = 2;
+        }
+        db.execSQL("INSERT INTO UserChoices (userId, restaurantId) " +
+                "VALUES (\"" + userId + "\",\"" + restaurantId + "\");");
+    }
+
+    public List<Restaurant> getChoices() {
+        // find userchoices that exist for both users
+        // create a list restaurants for those duplicates
+        return null;
     }
 }

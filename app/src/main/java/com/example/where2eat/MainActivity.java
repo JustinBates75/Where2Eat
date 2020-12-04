@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static int currentSwipeCount = 0;
     private static final int MAX_SWIPE_COUNT = 10;
     private boolean isPlayer1 = true;
-    List<Where2EatApplication.Restaurant> restaurants;
+    List<Restaurant> restaurants;
 
     private SharedPreferences sharedPref;
 
@@ -71,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
     {
         if(isDine)
         {
-            //Add choice to db
+            // swipe count + 1 because restaurant id's start counting from 1 instead of 0
+            ((Where2EatApplication)getApplication()).addChoice(isPlayer1, (currentSwipeCount + 1));
         }
 
         //Check if player change needed or end of player 2's turn
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void ChangeToNextRestaurant()
     {
-        Where2EatApplication.Restaurant currentRestaurant = restaurants.get(currentSwipeCount);
+        Restaurant currentRestaurant = restaurants.get(currentSwipeCount);
         imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
         restaurantNameText.setText(currentRestaurant.Name + " : " + (currentSwipeCount + 1));
         currentSwipeCount++;
