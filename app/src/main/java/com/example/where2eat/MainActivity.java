@@ -16,6 +16,8 @@ import android.content.SharedPreferences;
 import android.content.Context;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         restaurants = ((Where2EatApplication)getApplication()).getRestaurantList();
         PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
         ChangeToNextRestaurant();
+        imageView.animate().alpha(1f).setDuration(1);
         dineButton.setOnClickListener(v -> {
             onDineOrDash(true);
         }); //end of dine button listener
@@ -108,10 +111,30 @@ public class MainActivity extends AppCompatActivity {
     public void ChangeToNextRestaurant()
     {
         Restaurant currentRestaurant = restaurants.get(currentSwipeCount);
-        imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
+
+
+        // animation here
+        imageView.setAlpha(1f);
+        imageView.animate().alpha(0f).setDuration(500);
+        Timer timer = new Timer(true);
+        //imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
+                        imageView.animate().alpha(1f).setDuration(500);
+                    }
+                });
+            }
+        }, 500);
+
+
         restaurantNameText.setText(currentRestaurant.Name + " : " + (currentSwipeCount + 1));
         restaurantType.setText("Type of Restaurant: " + currentRestaurant.Type);
-        restaurantPrice.setText("Price Range: " + currentRestaurant.PriceRange);
+        restaurantPrice.setText("Price Range: " + currentRestaurant.PriceRange +" " + currentRestaurant.MIN +" - " + currentRestaurant.MAX);
         currentSwipeCount++;
     }
     @Override
