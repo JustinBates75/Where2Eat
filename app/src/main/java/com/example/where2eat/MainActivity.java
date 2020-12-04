@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.menu_reset:
                 //reset action
+                startActivity(new Intent(getApplicationContext(), RestaurantListActivity.class));
                 break;
             case R.id.menu_settings:
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
