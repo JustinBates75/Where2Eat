@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private Button dashButton;
     private TextView restaurantNameText;
     private TextView PlayerNameText;
+    private TextView restaurantType;
+    private TextView restaurantPrice;
 
     private static int currentSwipeCount = 0;
     private static final int MAX_SWIPE_COUNT = 10;
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         dashButton = findViewById(R.id.buttonDash);
         restaurantNameText = findViewById(R.id.resturantNameText);
         PlayerNameText = findViewById(R.id.PlayerNameText);
+        restaurantType = findViewById(R.id.restaurantType);
+        restaurantPrice = findViewById(R.id.restaurantPrice);
 
         restaurants = ((Where2EatApplication)getApplication()).getRestaurantList();
         PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
@@ -90,10 +94,11 @@ public class MainActivity extends AppCompatActivity {
                 //Move to results page
 
                 //Delete this, testing only
-                currentSwipeCount = 0;
+                /*currentSwipeCount = 0;
                 PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
                 isPlayer1 = true;
-                ChangeToNextRestaurant();
+                ChangeToNextRestaurant();*/
+                startActivity(new Intent(getApplicationContext(), ResultsActivity.class));
             }
         }
         else { //Otherwise, change to next restaurant
@@ -106,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         Restaurant currentRestaurant = restaurants.get(currentSwipeCount);
         imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
         restaurantNameText.setText(currentRestaurant.Name + " : " + (currentSwipeCount + 1));
+        restaurantType.setText("Type of Restaurant: " + currentRestaurant.Type);
+        restaurantPrice.setText("Price Range: " + currentRestaurant.PriceRange);
         currentSwipeCount++;
     }
     @Override
