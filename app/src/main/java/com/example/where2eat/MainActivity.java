@@ -78,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
     {
         if(isDine)
         {
-            // swipe count + 1 because restaurant id's start counting from 1 instead of 0
-            ((Where2EatApplication)getApplication()).addChoice(isPlayer1, (currentSwipeCount + 1));
+            ((Where2EatApplication)getApplication()).addChoice(isPlayer1, currentSwipeCount);
         }
 
         //Check if player change needed or end of player 2's turn

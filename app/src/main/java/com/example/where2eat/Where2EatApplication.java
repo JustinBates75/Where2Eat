@@ -154,8 +154,17 @@ public class Where2EatApplication extends Application {
     }
 
     public List<Restaurant> getChoices() {
-        // find userchoices that exist for both users
-        // create a list restaurants for those duplicates
-        return null;
+        SQLiteDatabase db = helper.getReadableDatabase();
+        List<Restaurant> allRes = getRestaurantList();
+        List<Restaurant> results = new ArrayList<Restaurant>();
+        for(Restaurant res: allRes)
+        {
+            Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM UserChoices WHERE restaurantId == " + res.Id + ";", null);
+            cursor.moveToFirst();
+            if(cursor.getInt(0) == 2) { //If more than 2 users, change from == 2
+                results.add(res);
+            }
+        }
+        return results;
     }
 }
