@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         //Fix this line with corresponding pages
@@ -202,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
         if (!isPlayer1) {
             PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer2Name());
         }
-
         super.onResume();
     }
 

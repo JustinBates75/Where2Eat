@@ -1,8 +1,12 @@
 package com.example.where2eat;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,5 +46,35 @@ public class RestaurantListActivity extends AppCompatActivity {
         }
         sv.addView(linearLayout);
         setContentView(sv);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        boolean ret = true;
+        switch (item.getItemId()){
+
+            case android.R.id.home:
+                //startActivity(new Intent(getApplicationContext(), HomeScreen.class));
+                onBackPressed();
+
+                break;
+            case R.id.menu_reset:
+                startActivity(new Intent(getApplicationContext(), RestaurantListActivity.class));
+                //reset action
+                break;
+            case R.id.menu_settings:
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                //Show settings
+                break;
+            default:
+                ret = super.onOptionsItemSelected(item);
+                break;
+
+        }
+        return ret;
     }
 }
