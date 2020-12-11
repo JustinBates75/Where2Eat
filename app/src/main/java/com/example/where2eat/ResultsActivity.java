@@ -2,15 +2,23 @@ package com.example.where2eat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -18,19 +26,28 @@ public class ResultsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
-
+        setContentView(R.layout.activity_results);
         List<Restaurant> results = ((Where2EatApplication)getApplication()).getChoices();
-        ScrollView sV = new ScrollView(this);
-        LinearLayout ll = new LinearLayout(this);
-        ll.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout ll = findViewById(R.id.resultLL);
+
+        Snackbar.make(findViewById(R.id.resultsConstraint), results.size() + " matches found.", Snackbar.LENGTH_LONG).show();
         for (Restaurant curRes: results) {
             ImageView iView = new ImageView(this);
-            iView.setBackgroundResource(getResources().getIdentifier("ic_res" + curRes.Id, "drawable", getPackageName()));
+            iView.setAdjustViewBounds(true);
+            iView.setImageResource(getResources().getIdentifier("ic_res" + curRes.Id, "drawable", getPackageName()));
             ll.addView(iView);
+            TextView textViewRName = new TextView(this);
+            textViewRName.setText(curRes.Name);
+            ll.addView(textViewRName);
+            //Type of Restaurant
+            TextView textViewRType= new TextView(this);
+            textViewRType.setText("Type of Restaurant:" + curRes.Type);
+            ll.addView(textViewRType);
+            //Restaurant Price Range
+            TextView textViewRPrice = new TextView(this);
+            textViewRPrice.setText("Price Range:" + curRes.PriceRange + curRes.MIN + " - " + curRes.MAX);
+            ll.addView(textViewRPrice);
         }
-        ll.setGravity(Gravity.CENTER);
-        sV.addView(ll);
-        setContentView(sV);
         super.onCreate(savedInstanceState);
     }
     @Override
