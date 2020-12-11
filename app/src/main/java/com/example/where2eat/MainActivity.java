@@ -2,6 +2,8 @@ package com.example.where2eat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+
 import android.view.Menu;
 import android.content.Intent;
 import android.view.Menu;
@@ -36,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean isPlayer1 = true;
     List<Restaurant> restaurants;
     private SharedPreferences sharedPref;
+    private boolean themeType;
+    private String player1Name;
+    private String player2Name;
 
     /*ToDO:
     Make an array to hold the restaurants and their id's
@@ -50,7 +55,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
-
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        //Fix this line with coresponding pages
+        themeType =sharedPref.getBoolean("switchTheme", false);
+        player1Name = sharedPref.getString("editName1",player1Name);
+        player2Name = sharedPref.getString("editName2",player2Name);
+        if (!themeType){
+            setTheme(R.style.AppTheme);
+        }
+        else
+        {
+            setTheme(R.style.DarkTheme);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = findViewById(R.id.imageView);
@@ -180,11 +197,41 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        if (!themeType){
+            setTheme(R.style.AppTheme);
+        }
+        else
+        {
+            setTheme(R.style.DarkTheme);
+        }
+if (isPlayer1)
+{
+    PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
+}
+if (!isPlayer1)
+{
+    PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer2Name());
+}
         super.onPause();
     }
 
     @Override
     protected void onResume() {
+        if (!themeType){
+            setTheme(R.style.AppTheme);
+        }
+        else
+        {
+            setTheme(R.style.DarkTheme);
+        }
+        if (isPlayer1)
+        {
+            PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
+        }
+        if (!isPlayer1)
+        {
+            PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer2Name());
+        }
         super.onResume();
     }
 }

@@ -3,14 +3,15 @@
     <PreferenceCategory android:title="Player Options">
 
         <EditTextPreference
-            android:defaultValue="Default value"
-            android:key="edit_text_preference_1"
+            android:defaultValue="false"
+            android:key="editName1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Edit Player 1 Name" />
+            android:title="Edit Player 1 Name"
+            app:defaultValue="false" />
         <EditTextPreference
             android:defaultValue="Default value"
-            android:key="edit_text_preference_1"
+            android:key="editName2"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="Edit Player 2 Name" />
@@ -19,7 +20,7 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="switch_preference_1"
+            android:key="switchTheme"
             android:title="Dark Theme On/Off" />
     </PreferenceCategory>
 </PreferenceScreen>
