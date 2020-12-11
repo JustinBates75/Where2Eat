@@ -18,15 +18,20 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
 public class ResultsActivity extends AppCompatActivity {
+
     private SharedPreferences sharedPref;
-    private Boolean themeType;
+    private boolean themeType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         themeType = sharedPref.getBoolean("switchTheme", false);
+        if (!themeType) {
+            setTheme(R.style.AppTheme);
+        } else {
+            setTheme(R.style.DarkTheme);
+        }
         setContentView(R.layout.activity_results);
         List<Restaurant> results = ((Where2EatApplication) getApplication()).getChoices();
         LinearLayout ll = findViewById(R.id.resultLL);
@@ -39,7 +44,7 @@ public class ResultsActivity extends AppCompatActivity {
             ll.addView(iView);
             //Restaurant Info View (custom control)
             RestaurantInfoView resIView = new RestaurantInfoView(this);
-            resIView.setValues(curRes.Name, curRes.Type, curRes.PriceRange, curRes.MIN, curRes.MAX);
+            resIView.setValues(curRes.Name, curRes.Type, curRes.PriceRange, curRes.MIN, curRes.MAX, themeType);
             ll.addView(resIView);
         }
         ActionBar actionBar = getSupportActionBar();

@@ -111,14 +111,16 @@ public class MainActivity extends AppCompatActivity {
             ChangeToRestaurant(currentSwipeCount);
             currentSwipeCount++;
             if (isDine)
-                imageView.animate().translationX(1500);
+                imageView.animate().translationX(1200);
             else
-                imageView.animate().translationX(-1500);
+                imageView.animate().translationX(-1200);
         }
     }
 
     public void ChangeToRestaurant(int resNum) {
         Restaurant currentRestaurant = restaurants.get(resNum);
+        dineButton.setEnabled(false);
+        dashButton.setEnabled(false);
         // fade out
         imageView.setAlpha(1f);
         imageView.animate().alpha(0f).setDuration(500);
@@ -137,6 +139,19 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }, 500);
+        Timer timer2 = new Timer(true);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dineButton.setEnabled(true);
+                        dashButton.setEnabled(true);
+                    }
+                });
+            }
+        }, 1500);
         restaurantNameText.setText(currentRestaurant.Name + " : " + (resNum + 1));
         restaurantType.setText("Type of Restaurant: " + currentRestaurant.Type);
         restaurantPrice.setText("Price Range: " + currentRestaurant.PriceRange + " " + currentRestaurant.MIN + " - " + currentRestaurant.MAX);
