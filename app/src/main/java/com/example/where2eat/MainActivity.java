@@ -15,6 +15,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences;
 import android.content.Context;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView PlayerNameText;
     private TextView restaurantType;
     private TextView restaurantPrice;
-
+    private FloatingActionButton actionButton;
     private static int currentSwipeCount = 0;
     private static final int MAX_SWIPE_COUNT = 10;
     private boolean isPlayer1 = true;
@@ -59,11 +60,17 @@ public class MainActivity extends AppCompatActivity {
         PlayerNameText = findViewById(R.id.PlayerNameText);
         restaurantType = findViewById(R.id.restaurantType);
         restaurantPrice = findViewById(R.id.restaurantPrice);
-
         restaurants = ((Where2EatApplication)getApplication()).getRestaurantList();
         PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
         ChangeToNextRestaurant();
         imageView.animate().alpha(1f).setDuration(1);
+        actionButton = findViewById(R.id.mainActionButton);
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(getApplicationContext(), ResultsActivity.class), 1);
+            }
+        });
         dineButton.setOnClickListener(v -> {
             onDineOrDash(true);
         }); //end of dine button listener
@@ -114,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else { //Otherwise, change to next restaurant
             ChangeToNextRestaurant();
-
         }
     }
 
