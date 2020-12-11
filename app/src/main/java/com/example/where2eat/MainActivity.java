@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,12 +13,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences;
-import android.content.Context;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.Timer;
@@ -40,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
     List<Restaurant> restaurants;
     private SharedPreferences sharedPref;
     private GestureDetector gdt;
-    private static final int MIN_SWIPPING_DISTANCE = 50;
-    private static final int THRESHOLD_VELOCITY = 50;
     /*ToDO:
     Make an array to hold the restaurants and their id's
     Populate array form database
@@ -55,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = findViewById(R.id.imageView);
@@ -83,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         dashButton.setOnClickListener(v -> {
             onDineOrDash(false, false);
         }); //end of dash button listener
-        gdt = new GestureDetector(new GestureListener());
+        gdt = new GestureDetector(new SwipeListener());
         imageView.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
@@ -133,6 +126,10 @@ public class MainActivity extends AppCompatActivity {
         }
         else { //Otherwise, change to next restaurant
             ChangeToNextRestaurant();
+            if(isDine)
+                imageView.animate().translationX(1500);
+            else
+                imageView.animate().translationX(-1500);
         }
     }
 
@@ -142,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         // animation here
         imageView.setAlpha(1f);
         imageView.animate().alpha(0f).setDuration(500);
+
         Timer timer = new Timer(true);
         //imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
         timer.schedule(new TimerTask() {
@@ -152,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
                         imageView.animate().alpha(1f).setDuration(500);
+                        imageView.animate().translationX(0);
                     }
                 });
             }
@@ -200,20 +199,22 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    private class GestureListener extends GestureDetector.SimpleOnGestureListener
+    private class SwipeListener extends GestureDetector.SimpleOnGestureListener
     {
+        private static final int SWIPPING_DISTANCE = 50;
+        private static final int MIN_VELOCITY = 50;
         @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+        public boolean onFling(MotionEvent event1, MotionEvent event2, float vX, float vY)
         {
-            if (e1.getX() - e2.getX() > MIN_SWIPPING_DISTANCE && Math.abs(velocityX) > THRESHOLD_VELOCITY)
+            if (event1.getX() - event2.getX() > SWIPPING_DISTANCE && Math.abs(vX) > MIN_VELOCITY)
             {
+                //Swipe left
                 onDineOrDash(false, true);
-                return false;
             }
-            else if (e2.getX() - e1.getX() > MIN_SWIPPING_DISTANCE && Math.abs(velocityX) > THRESHOLD_VELOCITY)
+            else if (event2.getX() - event1.getX() > SWIPPING_DISTANCE && Math.abs(vX) > MIN_VELOCITY)
             {
+                //Swipe right
                 onDineOrDash(true, true);
-                return false;
             }
             return false;
         }
