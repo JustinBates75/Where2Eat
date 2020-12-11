@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView restaurantType;
     private TextView restaurantPrice;
     private FloatingActionButton actionButton;
-    private static int currentSwipeCount = 0;
+    public static int currentSwipeCount = 1;
     private static final int MAX_SWIPE_COUNT = 10;
     private boolean isPlayer1 = true;
     List<Restaurant> restaurants;
@@ -47,11 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        //Fix this line with corresponding pages
         themeType = sharedPref.getBoolean("switchTheme", false);
         player1Name = sharedPref.getString("editName1", player1Name);
         player2Name = sharedPref.getString("editName2", player2Name);
-        swipeOn=sharedPref.getBoolean("swipeOn", false);
+        swipeOn = sharedPref.getBoolean("swipeOn", false);
         if (!themeType) {
             setTheme(R.style.AppTheme);
         } else {
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         restaurantPrice = findViewById(R.id.restaurantPrice);
         restaurants = ((Where2EatApplication) getApplication()).getRestaurantList();
         PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer1Name());
-        ChangeToRestaurant(currentSwipeCount);
+        ChangeToRestaurant(currentSwipeCount - 1);
         imageView.animate().alpha(1f).setDuration(1);
         actionButton = findViewById(R.id.mainActionButton);
         actionButton.setOnClickListener(new View.OnClickListener() {
@@ -84,13 +83,13 @@ public class MainActivity extends AppCompatActivity {
             onDineOrDash(false);
         });
         gdt = new GestureDetector(new SwipeListener());
-        imageView.setOnTouchListener(new View.OnTouchListener()
-        {
+        imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(final View view, final MotionEvent event) {
                 gdt.onTouchEvent(event);
                 return true;
-            } });
+            }
+        });
     }
 
     public void onDineOrDash(boolean isDine) {
@@ -103,16 +102,15 @@ public class MainActivity extends AppCompatActivity {
             if (isPlayer1) {
                 isPlayer1 = false;
                 PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer2Name());
-                currentSwipeCount = 0;
+                currentSwipeCount = 1;
                 ChangeToRestaurant(currentSwipeCount);
-                currentSwipeCount++;
             } else {
                 startActivity(new Intent(getApplicationContext(), ResultsActivity.class));
             }
         } else { //Otherwise, change to next restaurant
             ChangeToRestaurant(currentSwipeCount);
             currentSwipeCount++;
-            if(isDine)
+            if (isDine)
                 imageView.animate().translationX(1500);
             else
                 imageView.animate().translationX(-1500);
@@ -139,8 +137,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }, 500);
-
-
         restaurantNameText.setText(currentRestaurant.Name + " : " + (resNum + 1));
         restaurantType.setText("Type of Restaurant: " + currentRestaurant.Type);
         restaurantPrice.setText("Price Range: " + currentRestaurant.PriceRange + " " + currentRestaurant.MIN + " - " + currentRestaurant.MAX);
@@ -156,30 +152,21 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         boolean ret = true;
         switch (item.getItemId()) {
-            case R.id.menu_reset:
-                //reset action
+            case R.id.menu_RestaurantList:
                 startActivity(new Intent(getApplicationContext(), RestaurantListActivity.class));
                 break;
             case R.id.menu_settings:
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                //Show settings
                 break;
             default:
                 ret = super.onOptionsItemSelected(item);
                 break;
-
         }
         return ret;
     }
 
     @Override
     protected void onPause() {
-        themeType = sharedPref.getBoolean("switchTheme", false);
-        if (!themeType) {
-            setTheme(R.style.AppTheme);
-        } else {
-            setTheme(R.style.DarkTheme);
-        }
         if (isPlayer1) {
             PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer1Name());
         }
@@ -191,12 +178,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        themeType = sharedPref.getBoolean("switchTheme", false);
-        if (!themeType) {
-            setTheme(R.style.AppTheme);
-        } else {
-            setTheme(R.style.DarkTheme);
-        }
         if (isPlayer1) {
             PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer1Name());
         }
@@ -206,14 +187,13 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    private class SwipeListener extends GestureDetector.SimpleOnGestureListener
-    {
+    private class SwipeListener extends GestureDetector.SimpleOnGestureListener {
         private static final int SWIPPING_DISTANCE = 50;
         private static final int MIN_VELOCITY = 50;
+
         @Override
-        public boolean onFling(MotionEvent event1, MotionEvent event2, float vX, float vY)
-        {
-            swipeOn=sharedPref.getBoolean("swipeOn", false);
+        public boolean onFling(MotionEvent event1, MotionEvent event2, float vX, float vY) {
+            swipeOn = sharedPref.getBoolean("swipeOn", false);
             if (swipeOn) {
                 if (event1.getX() - event2.getX() > SWIPPING_DISTANCE && Math.abs(vX) > MIN_VELOCITY) {
                     //Swipe left

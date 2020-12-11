@@ -21,7 +21,7 @@ public class RestaurantInfoView extends LinearLayout {
 
     public void setValues(String title, String type, String price, int min, int max) {
         ((TextView) findViewById(R.id.resTitle)).setText("Restaurant name: " + title);
-        ((TextView) findViewById(R.id.resType)).setText("Type of Restaurant: "  + type);
+        ((TextView) findViewById(R.id.resType)).setText("Type of Restaurant: " + type);
         ((TextView) findViewById(R.id.resPrice)).setText("Price Range: " + price + " " + min + " - " + max);
     }
 }

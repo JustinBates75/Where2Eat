@@ -27,7 +27,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         ScrollView sv = new ScrollView(this);
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-
+        //Page Title TextView
         TextView textTitle = new TextView(this);
         textTitle.setText(R.string.RestaurantListTitle);
         textTitle.setTextSize(40);
@@ -51,29 +51,23 @@ public class RestaurantListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         boolean ret = true;
-        switch (item.getItemId()){
-
+        switch (item.getItemId()) {
             case android.R.id.home:
-                //startActivity(new Intent(getApplicationContext(), HomeScreen.class));
                 onBackPressed();
-
                 break;
-            case R.id.menu_reset:
+            case R.id.menu_RestaurantList:
                 startActivity(new Intent(getApplicationContext(), RestaurantListActivity.class));
-                //reset action
                 break;
             case R.id.menu_settings:
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                //Show settings
                 break;
             default:
                 ret = super.onOptionsItemSelected(item);
                 break;
-
         }
         return ret;
     }
