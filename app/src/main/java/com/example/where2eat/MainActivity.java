@@ -2,10 +2,13 @@ package com.example.where2eat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean isPlayer1 = true;
     List<Restaurant> restaurants;
     private SharedPreferences sharedPref;
-
+    private GestureDetector gdt;
+    private static final int MIN_SWIPPING_DISTANCE = 50;
+    private static final int THRESHOLD_VELOCITY = 50;
     /*ToDO:
     Make an array to hold the restaurants and their id's
     Populate array form database
@@ -72,16 +77,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         dineButton.setOnClickListener(v -> {
-            onDineOrDash(true);
+            onDineOrDash(true, false);
         }); //end of dine button listener
 
         dashButton.setOnClickListener(v -> {
-            onDineOrDash(false);
+            onDineOrDash(false, false);
         }); //end of dash button listener
-
+        gdt = new GestureDetector(new GestureListener());
+        imageView.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(final View view, final MotionEvent event) {
+                gdt.onTouchEvent(event);
+                return true;
+            } });
         //sharedPref = getSharedPreferences("lastInputs", MODE_PRIVATE);
     }// end of create
-    public void onDineOrDash(boolean isDine)
+    public void onDineOrDash(boolean isDine, boolean isSwipe)
     {
         if(isDine)
         {
@@ -186,5 +198,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener
+    {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+        {
+            if (e1.getX() - e2.getX() > MIN_SWIPPING_DISTANCE && Math.abs(velocityX) > THRESHOLD_VELOCITY)
+            {
+                onDineOrDash(false, true);
+                return false;
+            }
+            else if (e2.getX() - e1.getX() > MIN_SWIPPING_DISTANCE && Math.abs(velocityX) > THRESHOLD_VELOCITY)
+            {
+                onDineOrDash(true, true);
+                return false;
+            }
+            return false;
+        }
     }
 }
