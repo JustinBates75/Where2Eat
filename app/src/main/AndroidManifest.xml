@@ -12,7 +12,6 @@
         android:theme="@style/SplashScreenTheme">
         <activity android:name=".RestaurantListActivity"></activity>
         <activity android:name=".ResultsActivity" />
-        <activity android:name=".Settings" />
         <activity android:name=".HomeScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

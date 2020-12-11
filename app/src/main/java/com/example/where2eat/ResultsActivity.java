@@ -61,10 +61,11 @@ public class ResultsActivity extends AppCompatActivity {
         boolean ret = true;
         switch (item.getItemId()){
             case R.id.menu_reset:
+                startActivity(new Intent(getApplicationContext(), RestaurantListActivity.class));
                 //reset action
                 break;
             case R.id.menu_settings:
-                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                startActivity(new Intent(getApplicationContext(), RestaurantListActivity.class));
                 //Show settings
                 break;
             default:
