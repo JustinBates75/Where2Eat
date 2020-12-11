@@ -7,7 +7,6 @@ import androidx.preference.PreferenceManager;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,12 +14,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences;
-import android.content.Context;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.Timer;
@@ -45,16 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private String player2Name;
     private GestureDetector gdt;
     private Boolean swipeOn;
-    /*ToDO:
-    Make an array to hold the restaurants and their id's
-    Populate array form database
-    cycle through array on any button click
 
-    store both players checked resturants
-
-    cross reference the two checks
-
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
@@ -80,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         restaurantPrice = findViewById(R.id.restaurantPrice);
         restaurants = ((Where2EatApplication) getApplication()).getRestaurantList();
         PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer1Name());
-        ChangeToNextRestaurant();
+        ChangeToRestaurant(currentSwipeCount);
         imageView.animate().alpha(1f).setDuration(1);
         actionButton = findViewById(R.id.mainActionButton);
         actionButton.setOnClickListener(new View.OnClickListener() {
@@ -91,11 +78,10 @@ public class MainActivity extends AppCompatActivity {
         });
         dineButton.setOnClickListener(v -> {
             onDineOrDash(true);
-        }); //end of dine button listener
-
+        });
         dashButton.setOnClickListener(v -> {
             onDineOrDash(false);
-        }); //end of dash button listener
+        });
         gdt = new GestureDetector(new SwipeListener());
         imageView.setOnTouchListener(new View.OnTouchListener()
         {
@@ -104,16 +90,12 @@ public class MainActivity extends AppCompatActivity {
                 gdt.onTouchEvent(event);
                 return true;
             } });
-        //sharedPref = getSharedPreferences("lastInputs", MODE_PRIVATE);
-    }// end of create
+    }
 
     public void onDineOrDash(boolean isDine) {
         if (isDine) {
             ((Where2EatApplication) getApplication()).addChoice(isPlayer1, currentSwipeCount);
-
         }
-
-
         //Check if player change needed or end of player 2's turn
         if (currentSwipeCount >= MAX_SWIPE_COUNT ||
                 currentSwipeCount >= restaurants.size()) {
@@ -121,27 +103,14 @@ public class MainActivity extends AppCompatActivity {
                 isPlayer1 = false;
                 PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer2Name());
                 currentSwipeCount = 0;
-                ChangeToNextRestaurant();
+                ChangeToRestaurant(currentSwipeCount);
+                currentSwipeCount++;
             } else {
-                //if resturant id equals restaurant id of player one display snackbar
-                //End player 2's turn
-                //Move to results page
-                //Delete this, testing only
-                /*currentSwipeCount = 0;
-                PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
-                isPlayer1 = true;
-                ChangeToNextRestaurant();*/
-                //if (((Where2EatApplication)getApplication()).isMatch(currentSwipeCount) &&!isPlayer1){
-                //Snackbar.make(this, )findViewById(R.id.mainLayout)
-
-
-                //get amount of choices
-                //amount of choices concat iwht matches found
-                //}
                 startActivity(new Intent(getApplicationContext(), ResultsActivity.class));
             }
         } else { //Otherwise, change to next restaurant
-            ChangeToNextRestaurant();
+            ChangeToRestaurant(currentSwipeCount);
+            currentSwipeCount++;
             if(isDine)
                 imageView.animate().translationX(1500);
             else
@@ -149,13 +118,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void ChangeToNextRestaurant() {
-        Restaurant currentRestaurant = restaurants.get(currentSwipeCount);
-        // animation here
+    public void ChangeToRestaurant(int resNum) {
+        Restaurant currentRestaurant = restaurants.get(resNum);
+        // fade out
         imageView.setAlpha(1f);
         imageView.animate().alpha(0f).setDuration(500);
+        // fade in timer, after fade out ends
         Timer timer = new Timer(true);
-        //imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -171,10 +140,9 @@ public class MainActivity extends AppCompatActivity {
         }, 500);
 
 
-        restaurantNameText.setText(currentRestaurant.Name + " : " + (currentSwipeCount + 1));
+        restaurantNameText.setText(currentRestaurant.Name + " : " + (resNum + 1));
         restaurantType.setText("Type of Restaurant: " + currentRestaurant.Type);
         restaurantPrice.setText("Price Range: " + currentRestaurant.PriceRange + " " + currentRestaurant.MIN + " - " + currentRestaurant.MAX);
-        currentSwipeCount++;
     }
 
     @Override

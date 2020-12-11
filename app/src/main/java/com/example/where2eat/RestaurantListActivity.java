@@ -13,11 +13,6 @@ import java.util.List;
 
 public class RestaurantListActivity extends AppCompatActivity {
     List<Restaurant> restaurants;
-    private TextView restaurantNameText;
-    private TextView PlayerNameText;
-    private TextView restaurantType;
-    private TextView restaurantPrice;
-    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +43,4 @@ public class RestaurantListActivity extends AppCompatActivity {
         sv.addView(linearLayout);
         setContentView(sv);
     }
-    //imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
-
 }

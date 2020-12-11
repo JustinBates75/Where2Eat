@@ -42,10 +42,6 @@ public class HomeScreen extends AppCompatActivity {
                 ((Where2EatApplication)getApplication()).createUser(player2Name);
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
-            /* Editor ed = sharedPref.edit();
-            ed.putString("Player1Name", editTextTextPersonName.getText().toString());
-            ed.putString("player2Name", editTextTextPersonName2.getText().toString());*/
         }));
-        // sharedPref =getSharedPreferences("lastInputs", MODE_PRIVATE);
     }
 }
