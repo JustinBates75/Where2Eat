@@ -1,9 +1,11 @@
 package com.example.where2eat;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.content.SharedPreferences.Editor;
@@ -16,36 +18,46 @@ public class HomeScreen extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private EditText editTextTextPersonName;
     private EditText editTextTextPersonName2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean themeType = sharedPref.getBoolean("switchTheme", false);
+        if (!themeType) {
+            setTheme(R.style.AppTheme);
+        } else {
+            setTheme(R.style.DarkTheme);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
         startButton = findViewById(R.id.buttonStart);
         editTextTextPersonName = findViewById(R.id.editTextTextPersonName);
+
         editTextTextPersonName2 = findViewById(R.id.editTextTextPersonName2);
-
+        if (themeType) {
+            editTextTextPersonName.setTextColor(Color.WHITE);
+            editTextTextPersonName2.setTextColor(Color.WHITE);
+        }
         //Drop user table and choice table from db
-        ((Where2EatApplication)getApplication()).resetUsers();
+        ((Where2EatApplication) getApplication()).resetUsers();
 
-        startButton.setOnClickListener((v ->{
+        startButton.setOnClickListener((v -> {
             // Enter user data to db
             String player1Name = editTextTextPersonName.getText().toString();
             String player2Name = editTextTextPersonName2.getText().toString();
-            if(player1Name.isEmpty() || player2Name.isEmpty())
-            {
-                // Validation if either player name is empty
+            // Fill default player names if blank text boxes
+            if (player1Name.isEmpty()) {
+                player1Name = "Player 1";
             }
-            else // If names are filled out, allow the main activity to start
-            {
-                ((Where2EatApplication)getApplication()).createUser(player1Name);
-                ((Where2EatApplication)getApplication()).createUser(player2Name);
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            if (player2Name.isEmpty()) {
+                player2Name = "Player 2";
             }
-            /* Editor ed = sharedPref.edit();
-            ed.putString("Player1Name", editTextTextPersonName.getText().toString());
-            ed.putString("player2Name", editTextTextPersonName2.getText().toString());*/
+            ((Where2EatApplication) getApplication()).createUser(player1Name);
+            ((Where2EatApplication) getApplication()).createUser(player2Name);
+            MainActivity.currentSwipeCount = 1;
+            finishActivity(1);
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }));
-        // sharedPref =getSharedPreferences("lastInputs", MODE_PRIVATE);
     }
 }

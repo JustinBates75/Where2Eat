@@ -56,8 +56,6 @@ public class Where2EatApplication extends Application {
                         "(\"2\", \"1\", \"New York Fries\")," +
                         "(\"2\", \"1\", \"Pizza Pizza\"), " +
                         "(\"2\", \"2\", \"Pizza Hut\");");
-                //INSERT Users
-                /* db.execSQL("INSERT INTO Users (name) VALUES (\"User 1\"), (\"User 2\");"); */
             }
 
             @Override
@@ -118,15 +116,6 @@ public class Where2EatApplication extends Application {
         db.insert("Users", null, values);
     }
 
-    public void updateUser(String userName, int userId) {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("name", userName);
-        String where = "userId=?";
-        String[] whereArgs = new String[]{String.valueOf(userId)};
-        db.update("Users", values, where, whereArgs);
-    }
-
     public String getPlayer1Name()
     {
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -170,18 +159,10 @@ public class Where2EatApplication extends Application {
         {
             Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM UserChoices WHERE restaurantId == " + res.Id + ";", null);
             cursor.moveToFirst();
-            if(cursor.getInt(0) == 2) { //If more than 2 users, change from == 2
+            if(cursor.getInt(0) == 2) {
                 results.add(res);
             }
         }
         return results;
-    }
-
-    public boolean isMatch(int id)
-    {
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM UserChoices WHERE userId = 1 AND restaurantId = " + id, null);
-        cursor.moveToFirst();
-        return !cursor.isNull(0);
     }
 }

@@ -19,6 +19,7 @@ import java.util.List;
 
 public class RestaurantListActivity extends AppCompatActivity {
     List<Restaurant> restaurants;
+
     private TextView restaurantNameText;
     private TextView PlayerNameText;
     private TextView restaurantType;
@@ -26,6 +27,8 @@ public class RestaurantListActivity extends AppCompatActivity {
     private ImageView imageView;
     private SharedPreferences sharedPref;
     private Boolean themeType;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         ScrollView sv = new ScrollView(this);
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-
+        //Page Title TextView
         TextView textTitle = new TextView(this);
         textTitle.setText(R.string.RestaurantListTitle);
         textTitle.setTextSize(40);
@@ -69,29 +72,23 @@ public class RestaurantListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-    //imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         boolean ret = true;
-        switch (item.getItemId()){
-
+        switch (item.getItemId()) {
             case android.R.id.home:
-                //startActivity(new Intent(getApplicationContext(), HomeScreen.class));
                 onBackPressed();
-
                 break;
-            case R.id.menu_reset:
+            case R.id.menu_RestaurantList:
                 startActivity(new Intent(getApplicationContext(), RestaurantListActivity.class));
-                //reset action
                 break;
             case R.id.menu_settings:
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                //Show settings
                 break;
             default:
                 ret = super.onOptionsItemSelected(item);
                 break;
-
         }
         return ret;
     }

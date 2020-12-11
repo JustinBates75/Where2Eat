@@ -1,5 +1,6 @@
 package com.example.where2eat;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -13,27 +14,19 @@ import androidx.preference.PreferenceManager;
 public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private Boolean themeType;
-    private String player1Name;
-    private String player2Name;
-    private String p1Old;
-    private String p2Old;
     private Boolean swipeOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        //Fix this line with coresponding pages
-        themeType =sharedPref.getBoolean("switchTheme", false);
+        themeType = sharedPref.getBoolean("switchTheme", false);
+        swipeOn = sharedPref.getBoolean("swipeOn", false);
 
-        swipeOn =sharedPref.getBoolean("swipeOn", false);
-
-        if (!themeType){
+        if (!themeType) {
             setTheme(R.style.AppTheme);
-        }
-        else
-        {
+        } else {
             setTheme(R.style.DarkTheme);
         }
         setContentView(R.layout.settings_activity);
@@ -48,45 +41,20 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-        @Override
-        public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-            boolean ret=true;
-            //If not set here return can be set in the indivisual cases
-            switch(item.getItemId()){
-
-                case android.R.id.home:
-                    onBackPressed();
-
-                    break;
-                default:
-                    //This occurs if neither ids are gathered
-                    ret=super.onOptionsItemSelected(item);
-                    break;
-            }
-
-            return ret;
-        }
 
     @Override
-    protected void onPause() {
-        themeType = sharedPref.getBoolean("switchTheme", false);
-        if (!themeType) {
-            setTheme(R.style.AppTheme);
-        } else {
-            setTheme(R.style.DarkTheme);
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        boolean ret = true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(getApplicationContext(), HomeScreen.class));
+                break;
+            default:
+                ret = super.onOptionsItemSelected(item);
+                break;
         }
-        super.onPause();
-    }
 
-    @Override
-    protected void onResume() {
-        themeType = sharedPref.getBoolean("switchTheme", false);
-        if (!themeType) {
-            setTheme(R.style.AppTheme);
-        } else {
-            setTheme(R.style.DarkTheme);
-        }
-        super.onResume();
+        return ret;
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
