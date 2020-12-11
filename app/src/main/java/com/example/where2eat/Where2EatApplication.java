@@ -151,10 +151,6 @@ public class Where2EatApplication extends Application {
         }
         db.execSQL("INSERT INTO UserChoices (userId, restaurantId) " +
                 "VALUES (\"" + userId + "\",\"" + restaurantId + "\");");
-        if (userId==2)
-        {
-
-        }
     }
 
     public List<Restaurant> getChoices() {
@@ -171,10 +167,7 @@ public class Where2EatApplication extends Application {
         }
         return results;
     }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     public boolean isMatch(int id)
     {
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -182,8 +175,5 @@ public class Where2EatApplication extends Application {
         cursor.moveToFirst();
         return !cursor.isNull(0);
     }
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 }

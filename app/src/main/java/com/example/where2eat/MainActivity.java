@@ -34,9 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int MAX_SWIPE_COUNT = 10;
     private boolean isPlayer1 = true;
     List<Restaurant> restaurants;
-    public int [] p1Choice;
-    public int [] p2Choice;
-
     private SharedPreferences sharedPref;
 
     /*ToDO:
