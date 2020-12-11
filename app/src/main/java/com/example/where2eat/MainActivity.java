@@ -15,6 +15,8 @@ import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences;
 import android.content.Context;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int MAX_SWIPE_COUNT = 10;
     private boolean isPlayer1 = true;
     List<Restaurant> restaurants;
+    public int [] p1Choice;
+    public int [] p2Choice;
 
     private SharedPreferences sharedPref;
 
@@ -73,13 +77,14 @@ public class MainActivity extends AppCompatActivity {
 
         //sharedPref = getSharedPreferences("lastInputs", MODE_PRIVATE);
     }// end of create
-
     public void onDineOrDash(boolean isDine)
     {
         if(isDine)
         {
             ((Where2EatApplication)getApplication()).addChoice(isPlayer1, currentSwipeCount);
+
         }
+
 
         //Check if player change needed or end of player 2's turn
         if(currentSwipeCount >= MAX_SWIPE_COUNT ||
@@ -92,27 +97,33 @@ public class MainActivity extends AppCompatActivity {
                 ChangeToNextRestaurant();
             }
             else {
+                //if resturant id equals restaurant id of player one display snackbar
                 //End player 2's turn
                 //Move to results page
-
                 //Delete this, testing only
                 /*currentSwipeCount = 0;
                 PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
                 isPlayer1 = true;
                 ChangeToNextRestaurant();*/
+                //if (((Where2EatApplication)getApplication()).isMatch(currentSwipeCount) &&!isPlayer1){
+                    //Snackbar.make(this, )findViewById(R.id.mainLayout)
+
+
+                    //get amount of choices
+                    //amount of choices concat iwht matches found
+                //}
                 startActivity(new Intent(getApplicationContext(), ResultsActivity.class));
             }
         }
         else { //Otherwise, change to next restaurant
             ChangeToNextRestaurant();
+
         }
     }
 
     public void ChangeToNextRestaurant()
     {
         Restaurant currentRestaurant = restaurants.get(currentSwipeCount);
-
-
         // animation here
         imageView.setAlpha(1f);
         imageView.animate().alpha(0f).setDuration(500);
@@ -137,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         restaurantPrice.setText("Price Range: " + currentRestaurant.PriceRange +" " + currentRestaurant.MIN +" - " + currentRestaurant.MAX);
         currentSwipeCount++;
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.consensus_menu, menu);
