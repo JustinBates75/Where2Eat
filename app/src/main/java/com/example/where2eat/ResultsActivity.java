@@ -30,11 +30,6 @@ public class ResultsActivity extends AppCompatActivity {
         if (!themeType) {
             setTheme(R.style.AppTheme);
         } else {
-        if (!themeType){
-            setTheme(R.style.AppTheme);
-        }
-        else
-        {
             setTheme(R.style.DarkTheme);
         }
         setContentView(R.layout.activity_results);
