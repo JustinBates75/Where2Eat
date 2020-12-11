@@ -171,9 +171,8 @@ public class Where2EatApplication extends Application {
     public boolean isMatch(int id)
     {
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM UserChoices WHERE userId = 1 AND restaurantId = " + id, null);
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM UserChoices WHERE userId = 1 AND restaurantId = " + id, null);
         cursor.moveToFirst();
         return !cursor.isNull(0);
     }
-
 }
