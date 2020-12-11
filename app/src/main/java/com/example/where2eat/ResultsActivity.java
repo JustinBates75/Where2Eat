@@ -67,6 +67,12 @@ public class ResultsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         boolean ret = true;
         switch (item.getItemId()){
+
+            case android.R.id.home:
+                startActivity(new Intent(getApplicationContext(), HomeScreen.class));
+                //onBackPressed();
+
+                break;
             case R.id.menu_reset:
                 startActivity(new Intent(getApplicationContext(), RestaurantListActivity.class));
                 //reset action
