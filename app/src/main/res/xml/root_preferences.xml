@@ -1,21 +1,25 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory android:title="Preference category">
+    <PreferenceCategory android:title="Player Options">
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="check_box_preference_1"
-            android:title="Check box preference" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="check_box_preference_2"
-            android:title="Check box preference" />
+        <EditTextPreference
+            android:defaultValue="Default value"
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Edit Player 1 Name" />
+        <EditTextPreference
+            android:defaultValue="Default value"
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Edit Player 2 Name" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Preference category">
+    <PreferenceCategory android:title="Them Options">
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="switch_preference_1"
-            android:title="Switch preference" />
+            android:title="Dark Theme On/Off" />
     </PreferenceCategory>
 </PreferenceScreen>

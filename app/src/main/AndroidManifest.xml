@@ -10,7 +10,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/SplashScreenTheme">
-        <activity android:name=".RestaurantListActivity"></activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme"></activity>
+        <activity android:name=".RestaurantListActivity" />
         <activity android:name=".ResultsActivity" />
         <activity android:name=".HomeScreen">
             <intent-filter>
