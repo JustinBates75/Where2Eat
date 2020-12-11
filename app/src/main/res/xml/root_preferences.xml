@@ -1,20 +1,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory android:title="Player Options">
+    <PreferenceCategory android:title="Interaction Preferences">
 
-        <EditTextPreference
+        <SwitchPreference
             android:defaultValue="false"
-            android:key="editName1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="Edit Player 1 Name"
-            app:defaultValue="false" />
-        <EditTextPreference
-            android:defaultValue="Default value"
-            android:key="editName2"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="Edit Player 2 Name" />
+            android:key="swipeOn"
+            android:title="Swiping On/Off" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Them Options">
 

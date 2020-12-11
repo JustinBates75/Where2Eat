@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private String player1Name;
     private String player2Name;
     private GestureDetector gdt;
+    private Boolean swipeOn;
     /*ToDO:
     Make an array to hold the restaurants and their id's
     Populate array form database
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         themeType = sharedPref.getBoolean("switchTheme", false);
         player1Name = sharedPref.getString("editName1", player1Name);
         player2Name = sharedPref.getString("editName2", player2Name);
+        swipeOn=sharedPref.getBoolean("swipeOn", false);
         if (!themeType) {
             setTheme(R.style.AppTheme);
         } else {
@@ -204,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        themeType = sharedPref.getBoolean("switchTheme", false);
         if (!themeType) {
             setTheme(R.style.AppTheme);
         } else {
@@ -220,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        themeType = sharedPref.getBoolean("switchTheme", false);
         if (!themeType) {
             setTheme(R.style.AppTheme);
         } else {
@@ -231,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
         if (!isPlayer1) {
             PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer2Name());
         }
+
         super.onResume();
     }
 
@@ -241,15 +246,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2, float vX, float vY)
         {
-            if (event1.getX() - event2.getX() > SWIPPING_DISTANCE && Math.abs(vX) > MIN_VELOCITY)
-            {
-                //Swipe left
-                onDineOrDash(false);
-            }
-            else if (event2.getX() - event1.getX() > SWIPPING_DISTANCE && Math.abs(vX) > MIN_VELOCITY)
-            {
-                //Swipe right
-                onDineOrDash(true);
+            swipeOn=sharedPref.getBoolean("swipeOn", false);
+            if (swipeOn) {
+                if (event1.getX() - event2.getX() > SWIPPING_DISTANCE && Math.abs(vX) > MIN_VELOCITY) {
+                    //Swipe left
+                    onDineOrDash(false);
+                } else if (event2.getX() - event1.getX() > SWIPPING_DISTANCE && Math.abs(vX) > MIN_VELOCITY) {
+                    //Swipe right
+                    onDineOrDash(true);
+                }
             }
             return false;
         }

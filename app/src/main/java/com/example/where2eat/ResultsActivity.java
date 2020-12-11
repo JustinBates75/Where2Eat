@@ -3,8 +3,10 @@ package com.example.where2eat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -23,9 +25,15 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
 public class ResultsActivity extends AppCompatActivity {
+    private SharedPreferences sharedPref;
+    private Boolean themeType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        //Fix this line with coresponding pages
+        themeType = sharedPref.getBoolean("switchTheme", false);
         setContentView(R.layout.activity_results);
         List<Restaurant> results = ((Where2EatApplication)getApplication()).getChoices();
         LinearLayout ll = findViewById(R.id.resultLL);
@@ -74,5 +82,27 @@ public class ResultsActivity extends AppCompatActivity {
 
         }
         return ret;
+    }
+
+    @Override
+    protected void onResume() {
+        themeType = sharedPref.getBoolean("switchTheme", false);
+        if (!themeType) {
+            setTheme(R.style.AppTheme);
+        } else {
+            setTheme(R.style.DarkTheme);
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        themeType = sharedPref.getBoolean("switchTheme", false);
+        if (!themeType) {
+            setTheme(R.style.AppTheme);
+        } else {
+            setTheme(R.style.DarkTheme);
+        }
+        super.onPause();
     }
 }
