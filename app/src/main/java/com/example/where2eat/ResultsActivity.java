@@ -35,6 +35,13 @@ public class ResultsActivity extends AppCompatActivity {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         //Fix this line with coresponding pages
         themeType = sharedPref.getBoolean("switchTheme", false);
+        if (!themeType){
+            setTheme(R.style.AppTheme);
+        }
+        else
+        {
+            setTheme(R.style.DarkTheme);
+        }
         setContentView(R.layout.activity_results);
         List<Restaurant> results = ((Where2EatApplication)getApplication()).getChoices();
         LinearLayout ll = findViewById(R.id.resultLL);

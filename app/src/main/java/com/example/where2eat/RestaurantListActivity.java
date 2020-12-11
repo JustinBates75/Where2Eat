@@ -3,8 +3,10 @@ package com.example.where2eat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +24,21 @@ public class RestaurantListActivity extends AppCompatActivity {
     private TextView restaurantType;
     private TextView restaurantPrice;
     private ImageView imageView;
+    private SharedPreferences sharedPref;
+    private Boolean themeType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        themeType =sharedPref.getBoolean("switchTheme", false);
+        if (!themeType){
+            setTheme(R.style.AppTheme);
+        }
+        else
+        {
+            setTheme(R.style.DarkTheme);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_list);
         restaurants = ((Where2EatApplication) getApplication()).getRestaurantList();
@@ -81,5 +94,26 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         }
         return ret;
+    }
+    @Override
+    protected void onResume() {
+        themeType = sharedPref.getBoolean("switchTheme", false);
+        if (!themeType) {
+            setTheme(R.style.AppTheme);
+        } else {
+            setTheme(R.style.DarkTheme);
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        themeType = sharedPref.getBoolean("switchTheme", false);
+        if (!themeType) {
+            setTheme(R.style.AppTheme);
+        } else {
+            setTheme(R.style.DarkTheme);
+        }
+        super.onPause();
     }
 }
