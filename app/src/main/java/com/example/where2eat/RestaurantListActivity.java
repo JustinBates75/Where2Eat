@@ -22,6 +22,16 @@ public class RestaurantListActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private boolean themeType;
 
+    private TextView restaurantNameText;
+    private TextView PlayerNameText;
+    private TextView restaurantType;
+    private TextView restaurantPrice;
+    private ImageView imageView;
+    private SharedPreferences sharedPref;
+    private Boolean themeType;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
@@ -30,6 +40,12 @@ public class RestaurantListActivity extends AppCompatActivity {
         if (!themeType) {
             setTheme(R.style.AppTheme);
         } else {
+        themeType =sharedPref.getBoolean("switchTheme", false);
+        if (!themeType){
+            setTheme(R.style.AppTheme);
+        }
+        else
+        {
             setTheme(R.style.DarkTheme);
         }
         super.onCreate(savedInstanceState);
@@ -81,5 +97,26 @@ public class RestaurantListActivity extends AppCompatActivity {
                 break;
         }
         return ret;
+    }
+    @Override
+    protected void onResume() {
+        themeType = sharedPref.getBoolean("switchTheme", false);
+        if (!themeType) {
+            setTheme(R.style.AppTheme);
+        } else {
+            setTheme(R.style.DarkTheme);
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        themeType = sharedPref.getBoolean("switchTheme", false);
+        if (!themeType) {
+            setTheme(R.style.AppTheme);
+        } else {
+            setTheme(R.style.DarkTheme);
+        }
+        super.onPause();
     }
 }
