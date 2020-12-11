@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean themeType;
     private String player1Name;
     private String player2Name;
-
+    private GestureDetector gdt;
     /*ToDO:
     Make an array to hold the restaurants and their id's
     Populate array form database
@@ -58,14 +60,12 @@ public class MainActivity extends AppCompatActivity {
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         //Fix this line with coresponding pages
-        themeType =sharedPref.getBoolean("switchTheme", false);
-        player1Name = sharedPref.getString("editName1",player1Name);
-        player2Name = sharedPref.getString("editName2",player2Name);
-        if (!themeType){
+        themeType = sharedPref.getBoolean("switchTheme", false);
+        player1Name = sharedPref.getString("editName1", player1Name);
+        player2Name = sharedPref.getString("editName2", player2Name);
+        if (!themeType) {
             setTheme(R.style.AppTheme);
-        }
-        else
-        {
+        } else {
             setTheme(R.style.DarkTheme);
         }
         super.onCreate(savedInstanceState);
@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
         PlayerNameText = findViewById(R.id.PlayerNameText);
         restaurantType = findViewById(R.id.restaurantType);
         restaurantPrice = findViewById(R.id.restaurantPrice);
-        restaurants = ((Where2EatApplication)getApplication()).getRestaurantList();
-        PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
+        restaurants = ((Where2EatApplication) getApplication()).getRestaurantList();
+        PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer1Name());
         ChangeToNextRestaurant();
         imageView.animate().alpha(1f).setDuration(1);
         actionButton = findViewById(R.id.mainActionButton);
@@ -95,29 +95,33 @@ public class MainActivity extends AppCompatActivity {
         dashButton.setOnClickListener(v -> {
             onDineOrDash(false);
         }); //end of dash button listener
-
+        gdt = new GestureDetector(new SwipeListener());
+        imageView.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(final View view, final MotionEvent event) {
+                gdt.onTouchEvent(event);
+                return true;
+            } });
         //sharedPref = getSharedPreferences("lastInputs", MODE_PRIVATE);
     }// end of create
-    public void onDineOrDash(boolean isDine)
-    {
-        if(isDine)
-        {
-            ((Where2EatApplication)getApplication()).addChoice(isPlayer1, currentSwipeCount);
+
+    public void onDineOrDash(boolean isDine) {
+        if (isDine) {
+            ((Where2EatApplication) getApplication()).addChoice(isPlayer1, currentSwipeCount);
 
         }
 
 
         //Check if player change needed or end of player 2's turn
-        if(currentSwipeCount >= MAX_SWIPE_COUNT ||
-            currentSwipeCount >= restaurants.size())
-        {
+        if (currentSwipeCount >= MAX_SWIPE_COUNT ||
+                currentSwipeCount >= restaurants.size()) {
             if (isPlayer1) {
                 isPlayer1 = false;
-                PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer2Name());
+                PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer2Name());
                 currentSwipeCount = 0;
                 ChangeToNextRestaurant();
-            }
-            else {
+            } else {
                 //if resturant id equals restaurant id of player one display snackbar
                 //End player 2's turn
                 //Move to results page
@@ -127,22 +131,24 @@ public class MainActivity extends AppCompatActivity {
                 isPlayer1 = true;
                 ChangeToNextRestaurant();*/
                 //if (((Where2EatApplication)getApplication()).isMatch(currentSwipeCount) &&!isPlayer1){
-                    //Snackbar.make(this, )findViewById(R.id.mainLayout)
+                //Snackbar.make(this, )findViewById(R.id.mainLayout)
 
 
-                    //get amount of choices
-                    //amount of choices concat iwht matches found
+                //get amount of choices
+                //amount of choices concat iwht matches found
                 //}
                 startActivity(new Intent(getApplicationContext(), ResultsActivity.class));
             }
-        }
-        else { //Otherwise, change to next restaurant
+        } else { //Otherwise, change to next restaurant
             ChangeToNextRestaurant();
+            if(isDine)
+                imageView.animate().translationX(1500);
+            else
+                imageView.animate().translationX(-1500);
         }
     }
 
-    public void ChangeToNextRestaurant()
-    {
+    public void ChangeToNextRestaurant() {
         Restaurant currentRestaurant = restaurants.get(currentSwipeCount);
         // animation here
         imageView.setAlpha(1f);
@@ -157,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         imageView.setImageResource(getResources().getIdentifier("ic_res" + currentRestaurant.Id, "drawable", getPackageName()));
                         imageView.animate().alpha(1f).setDuration(500);
+                        imageView.animate().translationX(0);
                     }
                 });
             }
@@ -165,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
         restaurantNameText.setText(currentRestaurant.Name + " : " + (currentSwipeCount + 1));
         restaurantType.setText("Type of Restaurant: " + currentRestaurant.Type);
-        restaurantPrice.setText("Price Range: " + currentRestaurant.PriceRange +" " + currentRestaurant.MIN +" - " + currentRestaurant.MAX);
+        restaurantPrice.setText("Price Range: " + currentRestaurant.PriceRange + " " + currentRestaurant.MIN + " - " + currentRestaurant.MAX);
         currentSwipeCount++;
     }
 
@@ -178,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         boolean ret = true;
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_reset:
                 //reset action
                 startActivity(new Intent(getApplicationContext(), RestaurantListActivity.class));
@@ -197,41 +204,54 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        if (!themeType){
+        if (!themeType) {
             setTheme(R.style.AppTheme);
-        }
-        else
-        {
+        } else {
             setTheme(R.style.DarkTheme);
         }
-if (isPlayer1)
-{
-    PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
-}
-if (!isPlayer1)
-{
-    PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer2Name());
-}
+        if (isPlayer1) {
+            PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer1Name());
+        }
+        if (!isPlayer1) {
+            PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer2Name());
+        }
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        if (!themeType){
+        if (!themeType) {
             setTheme(R.style.AppTheme);
-        }
-        else
-        {
+        } else {
             setTheme(R.style.DarkTheme);
         }
-        if (isPlayer1)
-        {
-            PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer1Name());
+        if (isPlayer1) {
+            PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer1Name());
         }
-        if (!isPlayer1)
-        {
-            PlayerNameText.setText(((Where2EatApplication)getApplication()).getPlayer2Name());
+        if (!isPlayer1) {
+            PlayerNameText.setText(((Where2EatApplication) getApplication()).getPlayer2Name());
         }
         super.onResume();
+    }
+
+    private class SwipeListener extends GestureDetector.SimpleOnGestureListener
+    {
+        private static final int SWIPPING_DISTANCE = 50;
+        private static final int MIN_VELOCITY = 50;
+        @Override
+        public boolean onFling(MotionEvent event1, MotionEvent event2, float vX, float vY)
+        {
+            if (event1.getX() - event2.getX() > SWIPPING_DISTANCE && Math.abs(vX) > MIN_VELOCITY)
+            {
+                //Swipe left
+                onDineOrDash(false);
+            }
+            else if (event2.getX() - event1.getX() > SWIPPING_DISTANCE && Math.abs(vX) > MIN_VELOCITY)
+            {
+                //Swipe right
+                onDineOrDash(true);
+            }
+            return false;
+        }
     }
 }

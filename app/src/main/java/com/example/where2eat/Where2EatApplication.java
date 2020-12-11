@@ -118,6 +118,15 @@ public class Where2EatApplication extends Application {
         db.insert("Users", null, values);
     }
 
+    public void updateUser(String userName, int userId) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", userName);
+        String where = "userId=?";
+        String[] whereArgs = new String[]{String.valueOf(userId)};
+        db.update("Users", values, where, whereArgs);
+    }
+
     public String getPlayer1Name()
     {
         SQLiteDatabase db = helper.getReadableDatabase();
