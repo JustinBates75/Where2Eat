@@ -1,6 +1,7 @@
 package com.example.where2eat;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -36,20 +37,18 @@ public class ResultsActivity extends AppCompatActivity {
             iView.setAdjustViewBounds(true);
             iView.setImageResource(getResources().getIdentifier("ic_res" + curRes.Id, "drawable", getPackageName()));
             ll.addView(iView);
-            TextView textViewRName = new TextView(this);
-            textViewRName.setText(curRes.Name);
-            ll.addView(textViewRName);
-            //Type of Restaurant
-            TextView textViewRType= new TextView(this);
-            textViewRType.setText("Type of Restaurant:" + curRes.Type);
-            ll.addView(textViewRType);
-            //Restaurant Price Range
-            TextView textViewRPrice = new TextView(this);
-            textViewRPrice.setText("Price Range:" + curRes.PriceRange + curRes.MIN + " - " + curRes.MAX);
-            ll.addView(textViewRPrice);
+            //Restaurant Info View (custom control)
+            RestaurantInfoView resIView = new RestaurantInfoView(this);
+            resIView.setValues(curRes.Name, curRes.Type, curRes.PriceRange, curRes.MIN, curRes.MAX);
+            ll.addView(resIView);
+        }
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
         super.onCreate(savedInstanceState);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.consensus_menu, menu);
@@ -65,7 +64,7 @@ public class ResultsActivity extends AppCompatActivity {
                 //reset action
                 break;
             case R.id.menu_settings:
-                startActivity(new Intent(getApplicationContext(), RestaurantListActivity.class));
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 //Show settings
                 break;
             default:

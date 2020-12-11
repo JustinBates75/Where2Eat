@@ -56,10 +56,9 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        //Fix this line with coresponding pages
+        //Fix this line with corresponding pages
         themeType = sharedPref.getBoolean("switchTheme", false);
         player1Name = sharedPref.getString("editName1", player1Name);
         player2Name = sharedPref.getString("editName2", player2Name);

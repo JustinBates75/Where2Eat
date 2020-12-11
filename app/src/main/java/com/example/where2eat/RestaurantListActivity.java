@@ -40,18 +40,10 @@ public class RestaurantListActivity extends AppCompatActivity {
             iView.setAdjustViewBounds(true);
             iView.setImageResource(getResources().getIdentifier("ic_res" + curRes.Id, "drawable", getPackageName()));
             linearLayout.addView(iView);
-            //Restaurant Name
-            TextView textViewRName = new TextView(this);
-            textViewRName.setText(curRes.Name);
-            linearLayout.addView(textViewRName);
-            //Type of Restaurant
-            TextView textViewRType = new TextView(this);
-            textViewRType.setText("Type of Restaurant:" + curRes.Type);
-            linearLayout.addView(textViewRType);
-            //Restaurant Price Range
-            TextView textViewRPrice = new TextView(this);
-            textViewRPrice.setText("Price Range:" + curRes.PriceRange + curRes.MIN + " - " + curRes.MAX);
-            linearLayout.addView(textViewRPrice);
+            //Restaurant Info View (custom control)
+            RestaurantInfoView resIView = new RestaurantInfoView(this);
+            resIView.setValues(curRes.Name, curRes.Type, curRes.PriceRange, curRes.MIN, curRes.MAX);
+            linearLayout.addView(resIView);
         }
         sv.addView(linearLayout);
         setContentView(sv);

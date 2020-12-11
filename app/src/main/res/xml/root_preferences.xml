@@ -16,7 +16,7 @@
             android:singleLine="true"
             android:title="Edit Player 2 Name" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Them Options">
+    <PreferenceCategory android:title="Theme Options">
 
         <SwitchPreference
             android:defaultValue="false"

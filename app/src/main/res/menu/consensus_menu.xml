@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menu_reset"
-        android:title="Reset" />
+        android:title="Restaurant List" />
     <item
         android:id="@+id/menu_settings"
         android:title="@string/settings" />
