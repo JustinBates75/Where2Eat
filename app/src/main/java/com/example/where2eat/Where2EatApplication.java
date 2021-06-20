@@ -46,7 +46,7 @@ public class Where2EatApplication extends Application {
                         "(\"50\", \"100\", \"Expensive Meal\");");
                 //INSERT Restaurant Data
                 db.execSQL("INSERT INTO Restaurants (priceRangeId, typeId, name) VALUES" +
-                        "(\"4\", \"3\", \"The Keg\"), " +
+                        "(\"4\", \"3\", \"Fake Restaurant\"), " +
                         "(\"2\", \"1\", \"McDonald's\"), " +
                         "(\"2\", \"1\", \"A&W\"), " +
                         "(\"3\", \"2\", \"East Side Mario's\")," +
@@ -55,7 +55,8 @@ public class Where2EatApplication extends Application {
                         "(\"1\", \"1\", \"Tim Horton's\"), " +
                         "(\"2\", \"1\", \"New York Fries\")," +
                         "(\"2\", \"1\", \"Pizza Pizza\"), " +
-                        "(\"2\", \"2\", \"Pizza Hut\");");
+                        "(\"2\", \"2\", \"Pizza Hut\"), " +
+                        "(\"4\", \"3\", \"The Keg\")");
             }
 
             @Override
